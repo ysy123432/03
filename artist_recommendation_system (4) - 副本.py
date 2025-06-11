@@ -341,7 +341,7 @@ def load_model_data():
         model_data = pickle.load(f)
     return model_data
 @st.cache_resource
-def load_model_data():
+def load_image_model_data():
     model_path = pathlib.Path(__file__).parent / "图片识别.pkl"
     with open(model_path, "rb") as f:
         model_data = pickle.load(f)
