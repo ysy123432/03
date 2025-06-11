@@ -338,13 +338,7 @@ if sys.platform == "win32":
 
 
 # 读取模型
-@st.cache_resource
-def load_model_data():
-    model_path = pathlib.Path(__file__).parent / "推荐.pkl"
-    with open(model_path, "rb") as f:
-        model_data = pickle.load(f)
-    return model_data
-@st.cache_resource    
+#上传图片页
 @st.cache_resource
 def load_model():
     """加载并缓存模型"""
@@ -376,6 +370,14 @@ def load_model():
             pathlib.PosixPath = temp
 
     return model
+#推荐页面
+@st.cache_resource
+def load_model_data():
+    model_path = pathlib.Path(__file__).parent / "推荐.pkl"
+    with open(model_path, "rb") as f:
+        model_data = pickle.load(f)
+    return model_data
+  
 
 # 加载模型数据
 model_data = load_model_data()
