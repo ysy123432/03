@@ -340,26 +340,32 @@ def load_model_data():
     with open(model_path, "rb") as f:
         model_data = pickle.load(f)
     return model_data
+@st.cache_resource
+def load_model_data():
+    model_path = pathlib.Path(__file__).parent / "图片识别.pkl"
+    with open(model_path, "rb") as f:
+        model_data = pickle.load(f)
+    return model_data
 
-def load_model():
-    """加载并缓存模型"""
-    # Windows 路径兼容性处理
-    temp = None
-    if sys.platform == "win32":
-        temp = pathlib.PosixPath
-        pathlib.PosixPath = pathlib.WindowsPath
+# def load_model():
+#     """加载并缓存模型"""
+#     # Windows 路径兼容性处理
+#     temp = None
+#     if sys.platform == "win32":
+#         temp = pathlib.PosixPath
+#         pathlib.PosixPath = pathlib.WindowsPath
     
-    try:
-        #model_path = pathlib.Path(__file__).parent / "图片识别.pkl"
-        # 使用 os.path.join 来确保路径兼容性
-        model_path = os.path.join(os.path.dirname(__file__), "图片识别.pkl")
-        model = load_learner(model_path)
-    finally:
-        # 恢复原始设置
-        if sys.platform == "win32" and temp is not None:
-            pathlib.PosixPath = temp
+#     try:
+#         #model_path = pathlib.Path(__file__).parent / "图片识别.pkl"
+#         # 使用 os.path.join 来确保路径兼容性
+#         model_path = os.path.join(os.path.dirname(__file__), "图片识别.pkl")
+#         model = load_learner(model_path)
+#     finally:
+#         # 恢复原始设置
+#         if sys.platform == "win32" and temp is not None:
+#             pathlib.PosixPath = temp
     
-    return model
+#     return model
 # 加载模型数据
 model_data = load_model_data()
 artist_ids = model_data['artist_id']
