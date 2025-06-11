@@ -358,12 +358,6 @@ def load_model():
     
     return model
 
-    finally:
-        # 恢复 PosixPath 设置
-        if sys.platform == "win32" and temp is not None:
-            pathlib.PosixPath = temp
-
-    return model
 #推荐页面
 @st.cache_resource
 def load_model_data():
