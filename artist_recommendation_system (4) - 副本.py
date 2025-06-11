@@ -9,6 +9,9 @@ import seaborn as sns
 import pandas as pd
 import time
 from fastai.vision.all import *
+import os
+
+
 
 
 # 设置页面配置
@@ -348,7 +351,8 @@ def load_model():
     
     try:
         #model_path = pathlib.Path(__file__).parent / "图片识别.pkl"
-        model_path = Path(__file__).parent / "图片识别.pkl"  # 动态拼接，Windows 下有效
+        # 使用 os.path.join 来确保路径兼容性
+        model_path = os.path.join(os.path.dirname(__file__), "图片识别.pkl")
         model = load_learner(model_path)
     finally:
         # 恢复原始设置
