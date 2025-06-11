@@ -344,35 +344,26 @@ def load_model_data():
     with open(model_path, "rb") as f:
         model_data = pickle.load(f)
     return model_data
-@st.cache_resource
-def load_image_model_data():
-    model_path = Path(__file__).parent / "图片识别.pkl"
-    learner = load_learner(model_path)
-    return learner
-    # with open(model_path, "rb") as f:
-    #     model_data = pickle.load(f)
-    # return model_data
-
+@st.cache_resource    
+def load_model():
+    """加载并缓存模型"""
+    # Windows 路径兼容性处理
+    temp = None
+    if sys.platform == "win32":
+        temp = pathlib.PosixPath
+        pathlib.PosixPath = pathlib.WindowsPath
     
-# def load_model():
-#     """加载并缓存模型"""
-#     # Windows 路径兼容性处理
-#     temp = None
-#     if sys.platform == "win32":
-#         temp = pathlib.PosixPath
-#         pathlib.PosixPath = pathlib.WindowsPath
+    try:
+        #model_path = pathlib.Path(__file__).parent / "图片识别.pkl"
+        # 使用 os.path.join 来确保路径兼容性
+        model_path = os.path.join(os.path.dirname(__file__), "图片识别.pkl")
+        model = load_learner(model_path)
+    finally:
+        # 恢复原始设置
+        if sys.platform == "win32" and temp is not None:
+            pathlib.PosixPath = temp
     
-#     try:
-#         #model_path = pathlib.Path(__file__).parent / "图片识别.pkl"
-#         # 使用 os.path.join 来确保路径兼容性
-#         model_path = os.path.join(os.path.dirname(__file__), "图片识别.pkl")
-#         model = load_learner(model_path)
-#     finally:
-#         # 恢复原始设置
-#         if sys.platform == "win32" and temp is not None:
-#             pathlib.PosixPath = temp
-    
-#     return model
+    return model
 # 加载模型数据
 model_data = load_model_data()
 artist_ids = model_data['artist_id']
@@ -630,8 +621,7 @@ with col2:
         st.title("画师推荐系统")
         st.write("上传一张图片，应用将根据您上传的图片推荐相应的画师。")
 
-        # model = load_model()
-        model = load_image_model_data()
+        model = load_model()
 
         uploaded_files = st.file_uploader("选择1张图片...", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
 
