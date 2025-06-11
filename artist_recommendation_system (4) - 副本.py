@@ -623,7 +623,8 @@ with col2:
         st.title("画师推荐系统")
         st.write("上传一张图片，应用将根据您上传的图片推荐相应的画师。")
 
-        model = load_model()
+        # model = load_model()
+        model = load_image_model_data()
 
         uploaded_files = st.file_uploader("选择1张图片...", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
 
