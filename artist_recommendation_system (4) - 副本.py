@@ -344,7 +344,7 @@ def load_model_data():
 @st.cache_resource
 def load_image_model_data():
     model_path = Path(__file__).parent / "图片识别.pkl"
-    model_data = torch.load(model_path, map_location='cpu') 
+    model_data = torch.load(model_path,weights_only=True, map_location='cpu') 
     with open(model_path, "rb") as f:
         model_data = pickle.load(f)
     return model_data
