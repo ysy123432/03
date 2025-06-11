@@ -347,22 +347,16 @@ def load_model():
     if sys.platform == "win32":
         temp = pathlib.PosixPath
         pathlib.PosixPath = pathlib.WindowsPath
-
+    
     try:
-        # 兼容路径写法
-        model_path = os.path.join(os.path.dirname(__file__), "图片识别.pkl")
-
-        # ✅ 注册允许反序列化 fastai.learner.Learner 和 WindowsPath
-        import torch
-        import fastai.learner
-        from pathlib import PosixPath
-        torch.serialization.add_safe_globals({
-            'fastai.learner.Learner': fastai.learner.Learner,
-            'pathlib.WindowsPath': PosixPath  # 把 WindowsPath 映射成当前平台兼容的 PosixPath
-        })
-
-        # 加载模型
+        model_path = pathlib.Path(__file__).parent / "图片识别.pkl"
         model = load_learner(model_path)
+    finally:
+        # 恢复原始设置
+        if sys.platform == "win32" and temp is not None:
+            pathlib.PosixPath = temp
+    
+    return model
 
     finally:
         # 恢复 PosixPath 设置
