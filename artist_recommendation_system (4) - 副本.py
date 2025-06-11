@@ -10,7 +10,10 @@ import pandas as pd
 import time
 from fastai.vision.all import *
 import os
-import torch
+from fastai.learner import load_learner
+
+
+
 
 
 
@@ -344,11 +347,13 @@ def load_model_data():
 @st.cache_resource
 def load_image_model_data():
     model_path = Path(__file__).parent / "图片识别.pkl"
-    model_data = torch.load(model_path,weights_only=True, map_location='cpu') 
-    with open(model_path, "rb") as f:
-        model_data = pickle.load(f)
-    return model_data
+    learner = load_learner(model_path)
+    return learner
+    # with open(model_path, "rb") as f:
+    #     model_data = pickle.load(f)
+    # return model_data
 
+    
 # def load_model():
 #     """加载并缓存模型"""
 #     # Windows 路径兼容性处理
