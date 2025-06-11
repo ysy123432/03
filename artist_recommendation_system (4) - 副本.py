@@ -345,6 +345,7 @@ def load_model_data():
         model_data = pickle.load(f)
     return model_data
 @st.cache_resource    
+@st.cache_resource
 def load_model():
     """加载并缓存模型"""
     # Windows 路径兼容性处理
@@ -352,18 +353,30 @@ def load_model():
     if sys.platform == "win32":
         temp = pathlib.PosixPath
         pathlib.PosixPath = pathlib.WindowsPath
-    
+
     try:
-        #model_path = pathlib.Path(__file__).parent / "图片识别.pkl"
-        # 使用 os.path.join 来确保路径兼容性
+        # 兼容路径写法
         model_path = os.path.join(os.path.dirname(__file__), "图片识别.pkl")
+
+        # ✅ 注册允许反序列化 fastai.learner.Learner 和 WindowsPath
+        import torch
+        import fastai.learner
+        from pathlib import PosixPath
+        torch.serialization.add_safe_globals({
+            'fastai.learner.Learner': fastai.learner.Learner,
+            'pathlib.WindowsPath': PosixPath  # 把 WindowsPath 映射成当前平台兼容的 PosixPath
+        })
+
+        # 加载模型
         model = load_learner(model_path)
+
     finally:
-        # 恢复原始设置
+        # 恢复 PosixPath 设置
         if sys.platform == "win32" and temp is not None:
             pathlib.PosixPath = temp
-    
+
     return model
+
 # 加载模型数据
 model_data = load_model_data()
 artist_ids = model_data['artist_id']
